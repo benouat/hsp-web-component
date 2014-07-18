@@ -1,0 +1,50 @@
+function logs(scope) {
+  console.log(scope);
+  return "";
+}
+
+
+{template component(data)}
+  <p>Hello {data.firstname} {data.lastname}!</p>
+{/template}
+
+
+
+var proto = Object.create(HTMLElement.prototype);
+
+proto.data = {};
+
+proto.createdCallback = function() {
+  console.log("an instance of 'my-component' has been created");
+};
+
+proto.attachedCallback = function() {
+  console.log("'my-component' has been attached to the dom");
+
+  var attribs = this.attributes;
+  var count = attribs.length;
+  var attrib;
+
+  while (count-- > 0) {
+    attrib = attribs[count]
+    this.data[attrib.name] = attrib.value;
+  }
+
+  var shadow = this.createShadowRoot();
+  component.controllerConstructor = this;
+  component.call(component, this.data).render(shadow);
+};
+
+proto.detachedCallback = function() {
+  console.log("'my-component' has been removed from the dom");
+};
+
+proto.attributeChangedCallback = function(name, oldValue, newValue) {
+  console.log("attribute changed '" + name + "':", newValue);
+  this.data[name] = newValue;
+};
+
+
+document.registerElement('my-component', {
+  prototype: proto
+});

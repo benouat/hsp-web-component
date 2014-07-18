@@ -1,0 +1,17 @@
+var HelloCtrl = require('./hello.js');
+
+{template hello using ctrl:HelloCtrl}
+  <h1>Hello, {ctrl.firstname}!</h1>
+  <input model="{ctrl.firstname}"><button onclick="{ctrl.clear()}">Clear</button>
+  <hr>
+  <div>
+    <button onclick="{ctrl.toggle()}">{ctrl.visible ? "Hide" : "Show"} me!</button>
+    <button onclick="{ctrl.modifyAttribute()}">Modify lastname attribute</button>
+  </div>
+  {if ctrl.visible}
+    <my-component firstname="{ctrl.firstname}" lastname="{ctrl.lastname}">
+    </my-component>
+  {/if}
+{/template}
+
+module.exports = hello;
